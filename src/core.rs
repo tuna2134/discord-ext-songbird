@@ -18,7 +18,7 @@ impl Core {
     pub fn new(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> Self {
         let rt = Builder::new_multi_thread()
             .thread_name("dextbird-core");
-        pyo3_asyncio::tokio::init(rt);
+        pyo3_asyncio::tokio::init(&rt);
         let shard = Shard::Generic(Arc::new(VoiceUpdate {
             client: client.as_ref(py).clone().into(),
         }));
