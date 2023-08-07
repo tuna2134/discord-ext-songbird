@@ -19,6 +19,7 @@ async fn update_voice_state(
     let uvc_func = pyo3_asyncio::tokio::into_future(
         plug.call_method1("update_voice_state", (client, option))?,
     )?;
+    drop(plug);
     uvc_func.await?;
     Ok(())
 }
