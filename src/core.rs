@@ -7,14 +7,14 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 
 #[pyclass]
-struct Core {
+pub struct Core {
     call: Arc<Mutex<Call>>,
 }
 
 #[pymethods]
 impl Core {
     #[new]
-    fn new(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> Self {
+    pub fn new(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> Self {
         let shard = Shard::Generic(Arc::new(VoiceUpdate {
             client: client.as_ref(py).clone().into(),
         }));
@@ -24,7 +24,7 @@ impl Core {
         }
     }
 
-    fn join<'a>(&'a self, py: Python<'a>, channel_id: u64) -> PyResult<&PyAny> {
+    pub fn join<'a>(&'a self, py: Python<'a>, channel_id: u64) -> PyResult<&PyAny> {
         let mut call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
