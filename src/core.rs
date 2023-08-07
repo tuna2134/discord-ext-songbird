@@ -20,7 +20,7 @@ impl Core {
             .thread_name("dextbird-core")
             .build()
             .unwrap();
-        pyo3_asyncio::tokio::init(rt):
+        pyo3_asyncio::tokio::init(rt);
         let shard = Shard::Generic(Arc::new(VoiceUpdate {
             client: client.as_ref(py).clone().into(),
         }));
