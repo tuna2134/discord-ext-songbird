@@ -265,6 +265,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "dextbird"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "pyo3",
+ "pyo3-asyncio",
+ "songbird",
+ "tokio",
+]
+
+[[package]]
 name = "digest"
 version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -272,15 +283,6 @@ checksum = "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292"
 dependencies = [
  "block-buffer",
  "crypto-common",
-]
-
-[[package]]
-name = "discord-ext-songbird"
-version = "0.1.0"
-dependencies = [
- "pyo3",
- "pyo3-asyncio",
- "songbird",
 ]
 
 [[package]]
@@ -1607,6 +1609,7 @@ dependencies = [
  "libc",
  "mio",
  "num_cpus",
+ "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2",
