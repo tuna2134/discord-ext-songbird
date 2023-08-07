@@ -41,12 +41,10 @@ impl songbird::shards::VoiceUpdate for VoiceUpdate {
         if let Some(cid) = channel_id {
             ch_id = Some(cid.0);
         }
-        tokio::spawn(async move {
-            let uvc_func = Python::with_gil(|py| {
-                update_voice_state(py, client, guild_id.0, ch_id, self_deaf, self_mute)
-            });
-            uvc_func.await.unwrap();
-        }).await.unwrap();
+        let uvc_func = Python::with_gil(|py| {
+            update_voice_state(py, client, guild_id.0, ch_id, self_deaf, self_mute)
+        });
+        uvc_func.await.unwrap();
         Ok(())
     }
 }
