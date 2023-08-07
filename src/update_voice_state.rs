@@ -26,7 +26,7 @@ async fn update_voice_state(
 }
 
 pub struct VoiceUpdate {
-    client: Py<PyAny>,
+    pub client: Py<PyAny>,
 }
 
 #[async_trait::async_trait]

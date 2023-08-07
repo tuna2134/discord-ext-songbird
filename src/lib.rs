@@ -1,6 +1,7 @@
 use pyo3::prelude::*;
 
 mod update_voice_state;
+mod core;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
