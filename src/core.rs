@@ -20,7 +20,7 @@ impl Core {
         Self { call: Arc::new(Mutex::new(call)) }
     }
      
-    fn join(&self, py: Python, channel_id: u64) -> PyResult<&PyAny> {
+    fn join<'a>(&'a self, py: Python<'a>, channel_id: u64) -> PyResult<&PyAny> {
         let mut call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
