@@ -45,5 +45,6 @@ class VoiceClient(discord.VoiceProtocol):
 
     async def disconnect(self, *args) -> None:
         await self._core.leave()
+        self._core = None
         self.connected = False
         self.cleanup()
