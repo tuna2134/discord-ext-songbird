@@ -16,7 +16,9 @@ async def update_voice_state(client: discord.Client, option: Option) -> None:
         if option["channel_id"] is not None:
             channel = discord.Object(id=option["channel_id"])
         await guild.change_voice_state(
-            channel=channel, self_deaf=option["self_deaf"], self_mute=option["self_mute"]
+            channel=channel,
+            self_deaf=option["self_deaf"],
+            self_mute=option["self_mute"],
         )
     else:
         raise Exception("I can't found guild'")

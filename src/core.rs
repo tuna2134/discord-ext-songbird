@@ -5,7 +5,6 @@ use songbird::shards::Shard;
 use songbird::ytdl;
 use songbird::Call;
 use std::sync::Arc;
-use tokio::runtime::Builder;
 use tokio::sync::Mutex;
 
 #[pyfunction]
