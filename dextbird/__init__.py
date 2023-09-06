@@ -34,3 +34,6 @@ class VoiceClient(discord.VoiceProtocol):
 
     async def ytdl(self, url):
         await self._core.ytdl(url)
+
+    async def play(self, data: bytes) -> None:
+        await self._core.play(data)

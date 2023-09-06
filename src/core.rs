@@ -1,6 +1,7 @@
 use crate::update_voice_state::VoiceUpdate;
 use pyo3::prelude::*;
 use songbird::id::{ChannelId, GuildId, UserId};
+use songbird::input;
 use songbird::shards::Shard;
 use songbird::ytdl;
 use songbird::Call;
@@ -102,6 +103,22 @@ impl Core {
             let mut call = call.lock().await;
             let input = ytdl(&url).await.unwrap();
             call.play_source(input).play().unwrap();
+            Ok(())
+        })
+    }
+
+    pub fn play<'a>(&'a self, py: Python<'a>, data: Vec<u8>) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            let input_source = input::Input::new(
+                false,
+                input::Reader::from_memory(data),
+                input::Codec::Pcm,
+                input::Container::Raw,
+                None,
+            );
+            call.play_source(input_source).play().unwrap();
             Ok(())
         })
     }
