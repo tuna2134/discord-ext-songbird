@@ -100,9 +100,7 @@ impl Core {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
-            println!("Settup");
             let input = ytdl(&url).await.unwrap();
-            println!("Play start");
             call.play_source(input).play().unwrap();
             Ok(())
         })

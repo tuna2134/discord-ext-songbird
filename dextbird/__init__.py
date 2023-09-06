@@ -23,22 +23,17 @@ class VoiceClient(discord.VoiceProtocol):
         await self.voice_server_event.wait()
         await self._core.connect()
         self.connected = True
-        print("Connected")
 
     async def on_voice_server_update(self, data):
         await self._core.update_server(data["endpoint"], data["token"])
         self.voice_server_event.set()
-        print("Catch voice server update")
 
     async def on_voice_state_update(self, data):
         await self._core.update_state(data["session_id"], data.get("channel_id"))
         self.voice_state_event.set()
-        print("catch voice state update")
 
     async def ytdl(self, url):
-        print(f"Play {url}")
         await self._core.ytdl(url)
-        print("Start to play")
 
     async def play(self, data: bytes) -> None:
         await self._core.play(data)
