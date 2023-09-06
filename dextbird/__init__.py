@@ -34,7 +34,7 @@ class VoiceClient(discord.VoiceProtocol):
         self.voice_state_event.set()
 
     async def ytdl(self, url) -> Track:
-        await self._core.ytdl(url)
+        return await self._core.ytdl(url)
 
     async def play(self, data: bytes) -> None:
         await self._core.play(data)

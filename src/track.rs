@@ -21,7 +21,7 @@ impl Track {
     }
 
     pub fn disable_loop(&self) -> PyResult<()> {
-        self.handle.disable_loop().unwrap()
+        self.handle.disable_loop().unwrap();
         Ok(())
     }
 
