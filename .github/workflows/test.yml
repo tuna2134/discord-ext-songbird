@@ -17,7 +17,7 @@ jobs:
     - name: Install maturin
       run: pip install maturin
     - name: Compile dextbird
-      run: maturin build
+      run: maturin build -o dist && pip install dist/*.whl
     - name: Install pytest and discord.py
       run: pip install pytest discord.py
     - name: Test library
