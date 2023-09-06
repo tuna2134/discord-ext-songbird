@@ -1,0 +1,15 @@
+name: Test songbird
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install rust
+      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y
+    - name: Install maturin
+      run: maturin install
