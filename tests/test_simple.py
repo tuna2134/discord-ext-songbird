@@ -19,7 +19,7 @@ async def test_some_asyncio_code():
         print("Playing music")
         (await vc.ytdl("https://youtu.be/Vi-1402wYtI?si=x_rhftnpQ0fKcfEE")).play()
         print("Waiting 15 second")
-        await asyncio.sleep(15)
+        await asyncio.sleep(30)
         print("Disconnect from vc")
         await vc.disconnect()
         print("Finishing test")

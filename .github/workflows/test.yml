@@ -28,8 +28,11 @@ jobs:
     - name: Compile dextbird
       run: maturin build -o dist && pip install dist/*.whl
     - name: Install pytest and discord.py
-      run: pip install pytest pytest-asyncio discord.py
+      run: pip install pytest pytest-asyncio
+    - name: Install bot dependencies
+      run: apt-get update && apt-get install ffmpeg && \
+        pip install discord.py yt-dlp
     - name: Test library
-      run: pytest
+      run: pytest -s
       env:
         TOKEN: ${{secrets.TOKEN}}
