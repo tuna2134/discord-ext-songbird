@@ -2,13 +2,14 @@ import discord
 from .dextbird import Core, setup
 
 import asyncio
+from typing import Optional
 
 
 class VoiceClient(discord.VoiceProtocol):
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.channel = channel
-        self.guild = channel.guild
-        self._core = None
+        self.guild: discord.Guild = channel.guild
+        self._core: Optional[Core] = None
         self.client = client
         self.voice_server_event = asyncio.Event()
         self.voice_state_event = asyncio.Event()
