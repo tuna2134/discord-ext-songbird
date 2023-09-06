@@ -17,11 +17,15 @@ async def test_some_asyncio_code():
         print("Connecting to vc")
         vc = await channel.connect(cls=dextbird.VoiceClient)
         print("Playing music")
-        (await vc.ytdl("https://youtu.be/_NIp8wvNXmM")).play()
-        print("Waiting 105 second")
-        await asyncio.sleep(105)
+        wait_finished = asyncio.Event()
+        def after():
+            wait_finished.set()
+        track = await vc.ytdl("https://youtu.be/_NIp8wvNXmM")
+        print("Waiting to finish some music")
+        await wait_finished.wait()
         print("Disconnect from vc")
         await vc.disconnect()
+        await asyncio.sleep(2)
         print("Finishing test")
         await client.close()
 
