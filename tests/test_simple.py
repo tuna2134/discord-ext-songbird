@@ -24,5 +24,6 @@ async def test_some_asyncio_code():
         await vc.disconnect()
         print("Finishing test")
         await client.close()
+        print("Finished test")
 
     await client.start(os.getenv("TOKEN"))
