@@ -29,9 +29,10 @@ jobs:
       run: maturin build -o dist && pip install dist/*.whl
     - name: Install pytest and discord.py
       run: pip install pytest pytest-asyncio
-    - name: Install bot dependencies
-      run: sudo apt-get update && sudo apt-get install -y ffmpeg && \
-        pip install discord.py yt-dlp
+    - name: Install ffmpeg
+      run: sudo apt-get update && sudo apt-get install -y ffmpeg
+    - name: Install bot dependiences
+      run: pip install discord.py yt-dlp
     - name: Test library
       run: pytest -s
       env:
