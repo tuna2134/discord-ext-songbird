@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install rust
-      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y
+      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -S -- -y
     - name: Install maturin
       run: maturin install
