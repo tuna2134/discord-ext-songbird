@@ -14,6 +14,7 @@ pub struct TrackAfterEvent {
 impl EventHandler for TrackAfterEvent {
     async fn act(&self, _ctx: &EventContext<'_>) -> Option<Event> {
         let after_func = Arc::clone(&self.after_func);
+        log::debug!("After function");
         thread::spawn(move || {
             Python::with_gil(|py| {
                 after_func.call0(py).unwrap();
