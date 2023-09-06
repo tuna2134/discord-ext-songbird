@@ -6,10 +6,13 @@ from typing import Optional
 
 
 class VoiceClient(discord.VoiceProtocol):
+    
+    self._core: Optional[Core]
+    
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.channel = channel
         self.guild: discord.Guild = channel.guild
-        self._core: Optional[Core] = None
+        self._core: Optional[Core]
         self.client = client
         self.voice_server_event = asyncio.Event()
         self.voice_state_event = asyncio.Event()
@@ -44,4 +47,5 @@ class VoiceClient(discord.VoiceProtocol):
 
     async def disconnect(self, *args) -> None:
         await self._core.leave()
+        self.connected = False
         self.cleanup()
