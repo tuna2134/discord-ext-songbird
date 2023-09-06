@@ -1,4 +1,4 @@
-# discord-ext-songbirs
+# discord-ext-songbird
 
 ## support
 Only macos and linux.
