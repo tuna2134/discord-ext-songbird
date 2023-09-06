@@ -30,7 +30,7 @@ jobs:
     - name: Install pytest and discord.py
       run: pip install pytest pytest-asyncio
     - name: Install bot dependencies
-      run: apt-get update && apt-get install ffmpeg && \
+      run: sudo apt-get update && sudo apt-get install -y ffmpeg && \
         pip install discord.py yt-dlp
     - name: Test library
       run: pytest -s
