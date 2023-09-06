@@ -12,5 +12,5 @@ crate-type = ["cdylib"]
 async-trait = "0.1.72"
 pyo3 = "0.19.0"
 pyo3-asyncio = { version = "0.19.0", features = ["tokio-runtime"] }
-songbird = { version = "0.3.2", features = ["driver", "tokio"] }
+songbird = { version = "0.3.2", features = ["driver", "tokio", "yt-dlp"] }
 tokio = { version = "1.29.1", features = ["full"] }
