@@ -1,4 +1,5 @@
 use crate::update_voice_state::VoiceUpdate;
+use crate::track;
 use pyo3::prelude::*;
 use songbird::id::{ChannelId, GuildId, UserId};
 use songbird::input;
@@ -105,9 +106,8 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             let input = ytdl(&url).await.unwrap();
-            call.play_source(input).play().unwrap();
-            log::info!("Started to play yt");
-            Ok(())
+            let track = call.play_source(input);
+            Ok(track::Track { handle: track.into() })
         })
     }
 

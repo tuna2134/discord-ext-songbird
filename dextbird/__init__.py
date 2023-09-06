@@ -1,5 +1,5 @@
 import discord
-from .dextbird import Core, setup
+from .dextbird import Core, setup, Track
 
 import asyncio
 from typing import Optional
@@ -33,7 +33,7 @@ class VoiceClient(discord.VoiceProtocol):
         await self._core.update_state(data["session_id"], data.get("channel_id"))
         self.voice_state_event.set()
 
-    async def ytdl(self, url) -> None:
+    async def ytdl(self, url) -> Track:
         await self._core.ytdl(url)
 
     async def play(self, data: bytes) -> None:
