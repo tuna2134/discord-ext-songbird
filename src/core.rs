@@ -15,8 +15,6 @@ pub fn setup(
     user_id: u64
 ) -> PyResult<&PyAny> {
     pyo3_asyncio::tokio::future_into_py(py, async move {
-        let rt = Builder::new_multi_thread();
-        pyo3_asyncio::tokio::init(rt);
         let shard = Shard::Generic(Arc::new(VoiceUpdate {
             client: client.as_ref(py).clone().into(),
         }));
