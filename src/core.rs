@@ -111,7 +111,7 @@ impl Core {
         })
     }
 
-    pub fn play<'a>(&'a self, py: Python<'a>, data: Vec<u8>) -> PyResult<&PyAny> {
+    pub fn source<'a>(&'a self, py: Python<'a>, data: Vec<u8>) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
@@ -122,8 +122,7 @@ impl Core {
                 input::Container::Raw,
                 None,
             );
-            call.play_source(input_source).play().unwrap();
-            Ok(())
+            Ok(call.play_source(input_source).play().unwrap())
         })
     }
 
