@@ -8,17 +8,27 @@ Only macos and linux.
 from dextbird import VoiceClient
 import discord
 
+import os
+import logging
+
 
 client = discord.Client(intents=discord.Intents.all())
+logging.getLogger().setLevel(logging.INFO)
 
 
 @client.event
-async def on_message(message: discord.Message) -> None:
+async def on_message(message):
     if message.content == "!join":
         vc = await message.author.voice.channel.connect(cls=VoiceClient)
-        # Play lycoris recoil song
-        await vc.ytdl("https://youtu.be/VxR_BYPG7v4")
+    elif message.content == "!play":
+        # Play lycoris recoil
+        track = await message.guild.voice_client.ytdl("https://youtu.be/Vi-1402wYtI?si=x_rhftnpQ0fKcfEE")
+        track.play()
+    elif message.content == "!leave":
+        await message.guild.voice_client.disconnect()
+    elif message.content == "!stop":
+        await message.guild.voice_client.stop()
 
 
-client.run("TOKEN")
+client.run(os.getenv("TOKEN"))
 ```
