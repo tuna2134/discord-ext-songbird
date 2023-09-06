@@ -123,4 +123,22 @@ impl Core {
             Ok(())
         })
     }
+
+    pub fn leave<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            call.leave().await.unwrap();
+            Ok(())
+        })
+    }
+
+    pub fn stop<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            call.stop();
+            Ok(())
+        })
+    }
 }

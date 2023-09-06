@@ -42,3 +42,10 @@ class VoiceClient(discord.VoiceProtocol):
 
     async def play(self, data: bytes) -> None:
         await self._core.play(data)
+
+    async def stop(self) -> None:
+        await self._core.stop()
+
+    async def disconnect(self, *args) -> None:
+        await self._core.leave()
+        self.cleanup()
