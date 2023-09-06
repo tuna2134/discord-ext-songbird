@@ -1,7 +1,12 @@
-# discord-ext-songbird
+# discord-ext-songbirs
 
 ## support
 Only macos and linux.
+
+## install
+```sh
+pip install "dextbird @ git+https://github.com/tuna2134/discord-ext-songbird.git"
+```
 
 ## sample code
 ```python
