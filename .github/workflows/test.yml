@@ -7,6 +7,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
     - uses: actions/checkout@v4
     - name: Install rust
@@ -14,4 +17,4 @@ jobs:
     - name: Install maturin
       run: pip install maturin
     - name: Compile dextbird
-      run: maturin build
+      run: maturin build -r -o dist
