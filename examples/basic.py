@@ -1,9 +1,12 @@
 from dextbird import VoiceClient
 import discord
+
 import os
+import logging
 
 
 client = discord.Client(intents=discord.Intents.all())
+logging.getLogger().setLevel(logging.INFO)
 
 
 @client.event

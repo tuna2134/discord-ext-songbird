@@ -5,7 +5,7 @@ import asyncio
 
 
 class VoiceClient(discord.VoiceProtocol):
-    def __init__(self, client, channel):
+    def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.channel = channel
         self.guild = channel.guild
         self._core = None
@@ -15,7 +15,7 @@ class VoiceClient(discord.VoiceProtocol):
         self.connected: bool = False
         super().__init__(client, channel)
 
-    async def connect(self, *, self_deaf=False, self_mute=False, **kwargs):
+    async def connect(self, *, self_deaf=False, self_mute=False, **kwargs) -> None:
         self._core = await setup(self.client, self.guild.id, self.client.user.id)
         await self._core.join(self.channel.id)
 
@@ -24,15 +24,15 @@ class VoiceClient(discord.VoiceProtocol):
         await self._core.connect()
         self.connected = True
 
-    async def on_voice_server_update(self, data):
+    async def on_voice_server_update(self, data: dict) -> None:
         await self._core.update_server(data["endpoint"], data["token"])
         self.voice_server_event.set()
 
-    async def on_voice_state_update(self, data):
+    async def on_voice_state_update(self, data: dict) -> None:
         await self._core.update_state(data["session_id"], data.get("channel_id"))
         self.voice_state_event.set()
 
-    async def ytdl(self, url):
+    async def ytdl(self, url) -> None:
         await self._core.ytdl(url)
 
     async def play(self, data: bytes) -> None:

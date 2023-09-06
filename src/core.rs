@@ -76,7 +76,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_server(endpoint, token);
-            log::info!("Update server")
+            log::info!("Update server");
             Ok(())
         })
     }
@@ -95,7 +95,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_state(session_id, channelid);
-            log::info!("Update voice state")
+            log::info!("Update voice state");
             Ok(())
         })
     }
