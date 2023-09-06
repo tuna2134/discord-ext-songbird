@@ -12,4 +12,6 @@ jobs:
     - name: Install rust
       run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     - name: Install maturin
-      run: maturin install
+      run: pip install maturin
+    - name: Compile dextbird
+      run: maturin build
