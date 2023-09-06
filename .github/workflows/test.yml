@@ -17,4 +17,10 @@ jobs:
     - name: Install maturin
       run: pip install maturin
     - name: Compile dextbird
-      run: maturin build -r -o dist
+      run: maturin build
+    - name: Install pytest
+      run: pip install pytest
+    - name: Test library
+      run: pytest
+      env:
+        TOKEN: ${{secrets.TOKEN}}
