@@ -22,7 +22,6 @@ async def test_some_asyncio_code():
         await asyncio.sleep(105)
         print("Disconnect from vc")
         await vc.disconnect()
-        # await asyncio.sleep(2)
         print("Finishing test")
         await client.close()
 
