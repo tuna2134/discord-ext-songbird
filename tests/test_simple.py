@@ -19,6 +19,7 @@ async def test_some_asyncio_code():
         print("Playing music")
         wait_finished = asyncio.Event()
         def after():
+            print("Finished to play music")
             wait_finished.set()
         track = await vc.ytdl("https://youtu.be/_NIp8wvNXmM")
         print("Waiting to finish some music")
