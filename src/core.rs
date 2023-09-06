@@ -55,11 +55,12 @@ impl Core {
     pub fn connect<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let call_unlock = call.lock().await;
-            if let Some(connection_info) = call_unlock.current_connection() {
+            let mut call = call.lock().await;
+            if call.current_connection().is_some() {
                 println!("See connection info");
-                let mut call_unlock = call.lock().await;
-                call_unlock.connect(connection_info.clone()).await.unwrap();
+                // let mut call_unlock = call.lock().await;
+                let current_connection = call.current_connection().unwrap().clone();
+                call.connect(current_connection).await.unwrap();
             }
             Ok(())
         })
@@ -101,7 +102,9 @@ impl Core {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
+            println!("Settup");
             let input = ytdl(&url).await.unwrap();
+            println!("Play start");
             call.play_source(input).play().unwrap();
             Ok(())
         })

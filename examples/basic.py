@@ -10,7 +10,8 @@ client = discord.Client(intents=discord.Intents.all())
 async def on_message(message):
     if message.content == "!join":
         vc = await message.author.voice.channel.connect(cls=VoiceClient)
-        await vc.ytdl("https://www.youtube.com/watch?v=2snqdkxFjt0")
+    elif message.content == "!play":
+        await message.guild.voice_client.ytdl("https://www.youtube.com/watch?v=VxR_BYPG7v4")
 
 
 client.run(os.getenv("TOKEN"))
