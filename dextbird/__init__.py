@@ -7,7 +7,7 @@ from typing import Optional
 
 class VoiceClient(discord.VoiceProtocol):
     
-    self._core: Optional[Core]
+    _core: Optional[Core]
     
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.channel = channel
