@@ -55,12 +55,10 @@ impl Core {
     pub fn connect<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let call_unlock = call.lock().await;
-            let connection_info = call_unlock.current_connection();
-            println!("See connection info");
-            if let Some(info) = connection_info {
-                let mut call_unlock = call.lock().await;
-                call_unlock.connect(info.clone()).await.unwrap();
+            let mut call = call.lock().await;
+            if call.current_connection().is_some() {
+                let info = call.current_connection().unwrap().clone();
+                call.connect(info).await.unwrap();
             }
             Ok(())
         })
