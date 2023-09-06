@@ -10,12 +10,15 @@ class VoiceClient(discord.VoiceProtocol):
         self._core = None
         self.client = client
         # Core(client, channel.guild.id, client.user.id)
-        super().__init__()
+        super().__init__(client, channel)
 
-    async def connect(self, *, self_deaf=False, self_mute=False):
-        await setup(self.client, self.guild.id, self.client.user.id)
+    async def connect(self, *, self_deaf=False, self_mute=False, **kwargs):
+        self._core = await setup(self.client, self.guild.id, self.client.user.id)
         await self.guild.change_voice_state(
-            self.channel,
+            channel=self.channel,
             self_deaf=self_deaf,
             self_mute=self_mute,
         )
+    
+    async def on_voice_server_update(self, data):
+        await self._core.update_server(data["endpoint"], data["token"])

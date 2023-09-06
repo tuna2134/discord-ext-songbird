@@ -14,10 +14,10 @@ pub fn setup(
     guild_id: u64,
     user_id: u64
 ) -> PyResult<&PyAny> {
+    let shard = Shard::Generic(Arc::new(VoiceUpdate {
+        client: client.as_ref(py).clone().into(),
+    }));
     pyo3_asyncio::tokio::future_into_py(py, async move {
-        let shard = Shard::Generic(Arc::new(VoiceUpdate {
-            client: client.as_ref(py).clone().into(),
-        }));
         let call = Call::new(GuildId(guild_id), shard, UserId(user_id));
         Ok(Core { call: Arc::new(Mutex::new(call)) })
     })
@@ -46,10 +46,19 @@ impl Core {
     */
 
     pub fn join<'a>(&'a self, py: Python<'a>, channel_id: u64) -> PyResult<&PyAny> {
-        let mut call = Arc::clone(&self.call);
+        let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.join(ChannelId(channel_id)).await.unwrap();
+            Ok(())
+        })
+    }
+
+    pub fn update_server<'a>(&'a self, py: Python<'a>, endpoint: String, token: String) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            call.update_server(endpoint, token);
             Ok(())
         })
     }
