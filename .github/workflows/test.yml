@@ -19,7 +19,7 @@ jobs:
     - name: Compile dextbird
       run: maturin build -o dist && pip install dist/*.whl
     - name: Install pytest and discord.py
-      run: pip install pytest discord.py
+      run: pip install pytest pytest-asyncio discord.py
     - name: Test library
       run: pytest
       env:
