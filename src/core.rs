@@ -48,6 +48,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.join(ChannelId(channel_id)).await.unwrap();
+            log::info!("Join to channel");
             Ok(())
         })
     }
@@ -59,6 +60,7 @@ impl Core {
             if call.current_connection().is_some() {
                 let info = call.current_connection().unwrap().clone();
                 call.connect(info).await.unwrap();
+                log::info!("Connected");
             }
             Ok(())
         })
@@ -74,6 +76,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_server(endpoint, token);
+            log::info!("Update server")
             Ok(())
         })
     }
@@ -92,6 +95,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_state(session_id, channelid);
+            log::info!("Update voice state")
             Ok(())
         })
     }
@@ -102,6 +106,7 @@ impl Core {
             let mut call = call.lock().await;
             let input = ytdl(&url).await.unwrap();
             call.play_source(input).play().unwrap();
+            log::info!("Started to play yt");
             Ok(())
         })
     }
@@ -127,6 +132,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.leave().await.unwrap();
+            log::info!("Leave from vc");
             Ok(())
         })
     }
@@ -136,6 +142,7 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.stop();
+            log::info!("Stop to play voice");
             Ok(())
         })
     }
