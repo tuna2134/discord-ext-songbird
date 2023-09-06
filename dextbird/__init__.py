@@ -38,6 +38,7 @@ class VoiceClient(discord.VoiceProtocol):
         return await self._core.ytdl(url)
 
     async def source(self, data: bytes) -> Track:
+        "Play music from bytes"
         return await self._core.play(data)
 
     async def stop(self) -> None:
