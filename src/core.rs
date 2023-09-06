@@ -3,6 +3,7 @@ use pyo3::prelude::*;
 use songbird::id::{ChannelId, GuildId, UserId};
 use songbird::shards::Shard;
 use songbird::Call;
+use songbird::ytdl;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tokio::runtime::Builder;
@@ -59,6 +60,29 @@ impl Core {
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_server(endpoint, token);
+            Ok(())
+        })
+    }
+
+    pub fn update_state<'a>(&'a self, py: Python<'a>, session_id: String, channel_id: Option<String>) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        let mut channelid = None;
+        if let Some(chid) = channel_id {
+            channelid = Some(ChannelId(chid.parse::<u64>().unwrap()))
+        }
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            call.update_state(session_id, channelid);
+            Ok(())
+        })
+    }
+
+    pub fn ytdl<'a>(&'a self, py: Python<'a>, url: String) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            let input = ytdl(&url).await.unwrap();
+            call.play_source(input).play().unwrap();
             Ok(())
         })
     }

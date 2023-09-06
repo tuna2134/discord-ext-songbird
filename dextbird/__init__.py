@@ -22,3 +22,9 @@ class VoiceClient(discord.VoiceProtocol):
     
     async def on_voice_server_update(self, data):
         await self._core.update_server(data["endpoint"], data["token"])
+    
+    async def on_voice_state_update(self, data):
+        await self._core.update_state(data["session_id"], data.get("channel_id"))
+
+    async def ytdl(self, url):
+        await self._core.ytdl(url)

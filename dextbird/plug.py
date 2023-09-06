@@ -10,6 +10,7 @@ class Option(TypedDict):
 
 
 async def change_voice_state(client: discord.Client, option: Option) -> None:
+    print(option)
     guild: Optional[discord.Guild] = client.get_guild(option["guild_id"])
     if guild is not None:
         channel = None
