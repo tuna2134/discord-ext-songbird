@@ -52,6 +52,19 @@ impl Core {
         })
     }
 
+    pub fn connect<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let call_unlock = call.lock().await;
+            if let Some(connection_info) = call_unlock.current_connection() {
+                println!("See connection info");
+                let mut call_unlock = call.lock().await;
+                call_unlock.connect(connection_info.clone()).await.unwrap();
+            }
+            Ok(())
+        })
+    }
+
     pub fn update_server<'a>(
         &'a self,
         py: Python<'a>,

@@ -18,6 +18,7 @@ class VoiceClient(discord.VoiceProtocol):
     
     async def on_voice_server_update(self, data):
         await self._core.update_server(data["endpoint"], data["token"])
+        await self._core.connect()
     
     async def on_voice_state_update(self, data):
         await self._core.update_state(data["session_id"], data.get("channel_id"))
