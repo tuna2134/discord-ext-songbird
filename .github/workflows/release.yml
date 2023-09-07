@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: PyO3/maturin-action@v1
       with:
-        manylinux: auto
+        manylinux: "off"
         command: build
         args: --release --sdist -o dist --find-interpreter
     - name: Upload wheels
