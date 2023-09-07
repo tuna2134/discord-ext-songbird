@@ -1,4 +1,6 @@
 # discord-ext-songbird
+[![Test songbird](https://github.com/tuna2134/discord-ext-songbird/actions/workflows/test.yml/badge.svg)](https://github.com/tuna2134/discord-ext-songbird/actions/workflows/test.yml)
+
 Using songbird by discord.py
 
 ## support
