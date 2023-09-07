@@ -1,36 +1,39 @@
 import discord
 import pytest
 import dextbird
+
 import asyncio
 import os
+import logging
 
 
 client = discord.Client(intents=discord.Intents.all())
+logger = logging.getLogger()
 
 
 @pytest.mark.asyncio
 async def test_some_asyncio_code():
     @client.event
     async def on_ready() -> None:
-        print("Starting test")
+        logger.info("Starting test")
         channel = client.get_channel(961916734523179050)
-        print("Connecting to vc")
+        logger.info("Connecting to vc")
         vc = await channel.connect(cls=dextbird.VoiceClient)
-        print("Playing music")
+        logger.info("Playing music")
         wait_finished = asyncio.Event()
         def after():
-            print("Finished to play music")
+            logger.info("Finished to play music")
             wait_finished.set()
         await vc.deafen(True)
         track = await vc.ytdl("https://youtu.be/_NIp8wvNXmM")
         track.after(after)
         track.play()
-        print("Waiting to finish some music")
+        logger.info("Waiting to finish some music")
         await wait_finished.wait()
-        print("Disconnect from vc")
+        logger.info("Disconnect from vc")
         await vc.disconnect()
         await asyncio.sleep(2)
-        print("Finishing test")
+        logger.info("Finishing test")
         await client.close()
 
     await client.start(os.getenv("TOKEN"))
