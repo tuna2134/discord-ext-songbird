@@ -3,6 +3,8 @@ name: Push to github container register
 on:
   push:
     branches: main
+    paths:
+    - images
 
 jobs:
   push-docker:
