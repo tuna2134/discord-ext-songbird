@@ -34,7 +34,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./dist/docs
+          path: ./dist/docs/dextbird
   deploy:
     environment:
       name: github-pages
