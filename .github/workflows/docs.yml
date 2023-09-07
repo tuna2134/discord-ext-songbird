@@ -25,7 +25,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
       - name: Install requirements
         run: |
-          pip install maturin pdoc3
+          pip install maturin pdoc3 discord.py
           maturin build -o dist && pip install dist/*.whl
       - name: Build document
         run: pdoc dextbird --html -o docs
