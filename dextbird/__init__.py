@@ -18,7 +18,7 @@ class VoiceClient(discord.VoiceProtocol):
         self.connected: bool = False
         super().__init__(client, channel)
 
-    async def connect(self, *, self_deaf=False, self_mute=False, **kwargs) -> None:
+    async def connect(self, *, self_deaf: bool=False, self_mute: bool=False, **kwargs) -> None:
         "Connect to voice channel"
         self._core = await setup(self.client, self.guild.id, self.client.user.id)
         await self._core.join(self.channel.id)
@@ -38,7 +38,7 @@ class VoiceClient(discord.VoiceProtocol):
         await self._core.update_state(data["session_id"], data.get("channel_id"))
         self.voice_state_event.set()
 
-    async def ytdl(self, url: string) -> Track:
+    async def ytdl(self, url: str) -> Track:
         "Play music by yt-dlp"
         return await self._core.ytdl(url)
 
