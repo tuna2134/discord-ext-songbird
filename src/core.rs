@@ -105,7 +105,7 @@ impl Core {
                 codec = input::Codec::Opus(input::codec::OpusDecoderState::new().unwrap());
             };
             let input_source = input::Input::new(
-                false,
+                true,
                 input::Reader::from_memory(data),
                 codec,
                 input::Container::Raw,
