@@ -42,7 +42,7 @@ class VoiceClient(discord.VoiceProtocol):
         "Play music by yt-dlp"
         return await self._core.ytdl(url)
 
-    async def source(self, data: bytes, *, opus: bool=True) -> Track:
+    async def source(self, data: bytes, *, opus: bool=False) -> Track:
         "Play music from bytes"
         return await self._core.source(data, opus)
 
