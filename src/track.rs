@@ -58,4 +58,14 @@ impl Track {
         self.handle.add_event(Event::Track(TrackEvent::End), after_event).unwrap();
         Ok(())
     }
+
+    pub fn pause(&self) -> PyResult<()> {
+        self.handle.pause().unwrap();
+        Ok(())
+    }
+
+    pub fn stop(&self) -> PyResult<()> {
+        self.handle.stop().unwrap();
+        Ok(())
+    }
 }
