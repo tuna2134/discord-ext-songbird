@@ -107,7 +107,7 @@ impl Core {
             let input_source = input::Input::new(
                 false,
                 input::Reader::from_memory(data),
-                input::Codec::Pcm,
+                codec,
                 input::Container::Raw,
                 None,
             );
