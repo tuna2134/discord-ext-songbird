@@ -25,7 +25,7 @@ async def test_some_asyncio_code():
             logger.info("Finished to play music")
             wait_finished.set()
         await vc.deafen(True)
-        track = await vc.ytdl("https://youtu.be/_NIp8wvNXmM")
+        track = await vc.ytdl("https://youtu.be/fE9trKOuT3Q")
         track.after(after)
         track.play()
         logger.info("Waiting to finish some music")
