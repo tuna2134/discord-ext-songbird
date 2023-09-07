@@ -14,10 +14,19 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
       - name: Install requirements
         run: |
-          pip install .
-          pip install pdoc3
+          pip install maturin pdoc3
+          maturin build -o dist && pip install dist/*.whl
       - name: Build document
         run: pdoc dextbird --html -o docs
       - name: Upload artifact
