@@ -56,3 +56,7 @@ class VoiceClient(discord.VoiceProtocol):
         self._core = None
         self.connected = False
         self.cleanup()
+
+    async def deafen(self, deaf: bool) -> None:
+        "Deaf connection"
+        await self._core.deafen(deaf)
