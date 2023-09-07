@@ -35,7 +35,7 @@ jobs:
     - name: Install bot dependiences
       run: pip install discord.py yt-dlp
     - name: Test library
-      run: pytest -s --log-cli-level=DEBUG
+      run: pytest -s --log-cli-level=INFO
       env:
         TOKEN: ${{secrets.TOKEN}}
         RUST_BACKTRACE: full
