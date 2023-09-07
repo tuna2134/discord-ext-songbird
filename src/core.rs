@@ -111,7 +111,7 @@ impl Core {
                 input::Container::Raw,
                 None,
             );
-            Ok(track::Track { handle: call.play_source(input_source).play().unwrap().into() })
+            Ok(track::Track { handle: call.play_source(input_source).into() })
         })
     }
 
