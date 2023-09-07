@@ -39,7 +39,7 @@ class VoiceClient(discord.VoiceProtocol):
 
     async def source(self, data: bytes) -> Track:
         "Play music from bytes"
-        return await self._core.play(data)
+        return await self._core.source(data)
 
     async def stop(self) -> None:
         await self._core.stop()
