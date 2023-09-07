@@ -3,6 +3,7 @@ name: Test songbird
 on:
   push:
     branches: [main]
+  pull_request:
 
 jobs:
   test:
