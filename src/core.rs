@@ -102,7 +102,7 @@ impl Core {
             let mut call = call.lock().await;
             let mut codec = input::Codec::Pcm;
             if opus {
-                codec = input::Codec::Opus(OpusDecoderState::new().unwrap());
+                codec = input::Codec::Opus(input::codec::OpusDecoderState::new().unwrap());
             };
             let input_source = input::Input::new(
                 false,
