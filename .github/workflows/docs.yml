@@ -30,7 +30,7 @@ jobs:
           pip install maturin pdoc3 discord.py
           maturin build -o dist && pip install dist/*.whl
       - name: Build document
-        run: mkdir docs && pdoc dextbird --html -o docs/html
+        run: mkdir docs && cd docs && pdoc dextbird --html -o html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
