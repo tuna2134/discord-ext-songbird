@@ -23,6 +23,8 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+      - name: Install rust
+        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       - name: Install requirements
         run: |
           pip install maturin pdoc3 discord.py
