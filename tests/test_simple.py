@@ -36,4 +36,5 @@ async def test_some_asyncio_code():
         logger.info("Finishing test")
         await client.close()
 
-    await client.start(os.getenv("TOKEN"))
+    async with client:
+        await client.start(os.getenv("TOKEN"))
