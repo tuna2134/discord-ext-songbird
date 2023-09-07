@@ -96,10 +96,14 @@ impl Core {
         })
     }
 
-    pub fn source<'a>(&'a self, py: Python<'a>, data: Vec<u8>) -> PyResult<&PyAny> {
+    pub fn source<'a>(&'a self, py: Python<'a>, data: Vec<u8>, opus: bool) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
+            let mut codec = input::Codec::Pcm;
+            if opus {
+                codec = input::Codec::Opus(OpusDecoderState::new().unwrap()),
+            };
             let input_source = input::Input::new(
                 false,
                 input::Reader::from_memory(data),
