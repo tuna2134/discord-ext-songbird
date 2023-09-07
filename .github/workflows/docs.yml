@@ -3,8 +3,6 @@ name: Build document
 on:
   push:
     branches: ["main", "develop"]
-    paths:
-      - docs/**
 
 jobs:
   build:
