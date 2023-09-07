@@ -22,6 +22,8 @@ async def test_some_asyncio_code():
             print("Finished to play music")
             wait_finished.set()
         track = await vc.ytdl("https://youtu.be/_NIp8wvNXmM")
+        track.after(after)
+        track.play()
         print("Waiting to finish some music")
         await wait_finished.wait()
         print("Disconnect from vc")
