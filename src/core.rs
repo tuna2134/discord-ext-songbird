@@ -125,6 +125,16 @@ impl Core {
         })
     }
 
+    pub fn mute<'a>(&'a self, py: Python<'a>, mute: bool) -> PyResult<&PyAny> {
+        let call = Arc::clone(&self.call);
+        pyo3_asyncio::tokio::future_into_py(py, async move {
+            let mut call = call.lock().await;
+            call.mute(mute).await.unwrap();
+            log::info!("Connection is now mute");
+            Ok(())
+        })
+    }
+
     pub fn leave<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
