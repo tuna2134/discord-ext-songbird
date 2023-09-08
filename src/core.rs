@@ -9,6 +9,7 @@ use songbird::Call;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+// Setup core
 #[pyfunction]
 pub fn setup(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
     let shard = Shard::Generic(Arc::new(VoiceUpdate {
