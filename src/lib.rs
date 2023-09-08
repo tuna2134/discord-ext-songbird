@@ -4,7 +4,7 @@ mod core;
 mod update_voice_state;
 mod track;
 
-/// A Python module implemented in Rust.
+/// Core module
 #[pymodule]
 fn dextbird(_py: Python, m: &PyModule) -> PyResult<()> {
     pyo3_log::init();
