@@ -60,3 +60,7 @@ class VoiceClient(discord.VoiceProtocol):
     async def deafen(self, deaf: bool) -> None:
         "Deaf connection"
         await self._core.deafen(deaf)
+
+    async def mute(self, mute: bool) -> None:
+        "Mute connection"
+        await self._core.mute(mute)

@@ -9,6 +9,7 @@ use songbird::Call;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+// Setup core
 #[pyfunction]
 pub fn setup(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
     let shard = Shard::Generic(Arc::new(VoiceUpdate {
@@ -16,6 +17,7 @@ pub fn setup(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> 
     }));
     pyo3_asyncio::tokio::future_into_py(py, async move {
         let call = Call::new(GuildId(guild_id), shard, UserId(user_id));
+        log::info!("Setup end");
         Ok(Core {
             call: Arc::new(Mutex::new(call)),
         })
