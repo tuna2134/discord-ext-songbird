@@ -10,6 +10,9 @@ This library is wrapping songbird for discord.py
 ## support
 Only macos and linux.
 
+If you are using linux, we are only support this python version.
+3.8.10+, 3.9.5+, 3.10.0+
+
 ## install
 ```sh
 pip install "dextbird @ git+https://github.com/tuna2134/discord-ext-songbird.git"
