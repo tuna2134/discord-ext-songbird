@@ -28,6 +28,7 @@ jobs:
     - name: Install maturin
       run: pip3 install maturin[patchelf]
     - name: Install musl-tools
+      if: "matrix.target == 'x86_64-unknown-linux-musl'"
       run: sudo apt-get update && sudo apt-get install musl-tools
     - name: Build library
       run: maturin build -r -o dist --target=${{ matrix.target }}
@@ -51,3 +52,10 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: "*"
+    - name: Publish to PyPI
+      uses: PyO3/maturin-action@v1
+      env:
+        MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      with:
+        command: upload
+        args: --skip-existing *
