@@ -15,7 +15,7 @@ async def on_message(message):
         vc = await message.author.voice.channel.connect(cls=VoiceClient)
     elif message.content == "!play":
         def after():
-            print("Played")
+            print("Play finished")
         track = await message.guild.voice_client.ytdl("https://youtu.be/Vi-1402wYtI?si=x_rhftnpQ0fKcfEE")
         track.after(after)
         track.play()
