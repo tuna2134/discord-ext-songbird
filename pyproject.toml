@@ -16,6 +16,7 @@ discord-py = "^2.3.2"
 maturin = {extras = ["patchelf"], version = "^1.2.3"}
 black = "^23.9.1"
 pyright = "^1.1.326"
+pdoc3 = "^0.10.0"
 
 [build-system]
 requires = ["maturin>=1.2,<2.0"]
