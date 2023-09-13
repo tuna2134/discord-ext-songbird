@@ -98,23 +98,21 @@ impl Core {
         })
     }
 
-    pub fn source<'a>(&'a self, py: Python<'a>, data: Vec<u8>, opus: bool) -> PyResult<&PyAny> {
+    pub fn source<'a>(&'a self, data: Vec<u8>, opus: bool) -> PyResult<track::Track> {
         let call = Arc::clone(&self.call);
-        pyo3_asyncio::tokio::future_into_py(py, async move {
-            let mut call = call.lock().await;
-            let mut codec = input::Codec::Pcm;
-            if opus {
-                codec = input::Codec::Opus(input::codec::OpusDecoderState::new().unwrap());
-            };
-            let input_source = input::Input::new(
-                true,
-                input::Reader::from_memory(data),
-                codec,
-                input::Container::Raw,
-                None,
-            );
-            Ok(track::Track { handle: call.play_source(input_source).into() })
-        })
+        let mut call = call.blocking_lock();
+        let mut codec = input::Codec::Pcm;
+        if opus {
+            codec = input::Codec::Opus(input::codec::OpusDecoderState::new().unwrap());
+        };
+        let input_source = input::Input::new(
+            true,
+            input::Reader::from_memory(data),
+            codec,
+            input::Container::Raw,
+            None,
+        );
+        Ok(track::Track { handle: call.play_source(input_source).into() })
     }
 
     pub fn deafen<'a>(&'a self, py: Python<'a>, deaf: bool) -> PyResult<&PyAny> {
@@ -147,13 +145,11 @@ impl Core {
         })
     }
 
-    pub fn stop<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
+    pub fn stop<'a>(&'a self, py: Python<'a>) -> PyResult<()> {
         let call = Arc::clone(&self.call);
-        pyo3_asyncio::tokio::future_into_py(py, async move {
-            let mut call = call.lock().await;
-            call.stop();
-            log::info!("Stop to play voice");
-            Ok(())
-        })
+        let mut call = call.blocking_lock();
+        call.stop();
+        log::info!("Stop to play voice");
+        Ok(())
     }
 }
