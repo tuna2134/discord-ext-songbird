@@ -42,7 +42,7 @@ async def on_message(message):
     elif message.content == "!leave":
         await message.guild.voice_client.disconnect()
     elif message.content == "!stop":
-        await message.guild.voice_client.stop()
+        message.guild.voice_client.stop()
 
 
 client.run(os.getenv("TOKEN"))

@@ -19,21 +19,27 @@ logging.getLogger().setLevel(logging.INFO)
 @client.event
 async def on_message(message: discord.Message):
     if message.content == "!join":
-        vc = await message.author.voice.channel.connect(cls=VoiceClient)
+        await message.author.voice.channel.connect(cls=VoiceClient)
+        await message.reply("Joined to vc")
     elif message.content == "!play":
-
         def after():
             print("Play finished")
-
         track = await message.guild.voice_client.ytdl(
             "https://youtu.be/Vi-1402wYtI?si=x_rhftnpQ0fKcfEE"
         )
         track.after(after)
         track.play()
+        await message.reply("Play some music")
     elif message.content == "!leave":
         await message.guild.voice_client.disconnect()
+        await message.reply("Leave from vc")
     elif message.content == "!stop":
         message.guild.voice_client.stop()
+        await message.reply("Stop some music")
+    elif message.content == "!ping":
+        await message.reply(
+            f"Pong! 🏓\n> {round(client.latency * 1000, 2)}ms"
+        )
 
 
 client.run(os.getenv("TOKEN"))

@@ -16,11 +16,7 @@ class VoiceClient(discord.VoiceProtocol):
         self.voice_state_event = asyncio.Event()
         self.connected: bool = False
         super().__init__(client, channel)
-    
-    @property
-    def guild(self) -> discord.Guild:
-        "Return guild"
-        return self.guild
+        self.guild: discord.Guild = channel.guild
 
     async def connect(
         self, *, self_deaf: bool = False, self_mute: bool = False, **kwargs
