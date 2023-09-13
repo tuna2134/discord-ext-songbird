@@ -1,6 +1,12 @@
 import discord
 import pytest
 import dextbird
+try:
+    import dotenv
+except ImportError:
+    pass
+else:
+    dotenv.load_dotenv()
 
 import asyncio
 import os
