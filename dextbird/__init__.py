@@ -2,23 +2,29 @@ import discord
 from .dextbird import Core, setup, Track
 
 import asyncio
-from typing import Optional
+from typing import Optional, Union
 
 
 class VoiceClient(discord.VoiceProtocol):
     "discord.py extensions voiceclient"
-    
+    channel: Union[discord.VoiceChannel, discord.StageChannel]
+
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
-        self.channel = channel
-        self.guild: discord.Guild = channel.guild
         self._core: Optional[Core] = None
         self.client = client
         self.voice_server_event = asyncio.Event()
         self.voice_state_event = asyncio.Event()
         self.connected: bool = False
         super().__init__(client, channel)
+    
+    @property
+    def guild(self) -> discord.Guild:
+        "Return guild"
+        return self.guild
 
-    async def connect(self, *, self_deaf: bool=False, self_mute: bool=False, **kwargs) -> None:
+    async def connect(
+        self, *, self_deaf: bool = False, self_mute: bool = False, **kwargs
+    ) -> None:
         "Connect to voice channel"
         self._core = await setup(self.client, self.guild.id, self.client.user.id)
         await self._core.join(self.channel.id)
@@ -42,7 +48,7 @@ class VoiceClient(discord.VoiceProtocol):
         "Play music by yt-dlp"
         return await self._core.ytdl(url)
 
-    def source(self, data: bytes, *, opus: bool=False) -> Track:
+    def source(self, data: bytes, *, opus: bool = False) -> Track:
         "Play music from bytes"
         return self._core.source(data, opus)
 

@@ -1,6 +1,7 @@
 import discord
 import pytest
 import dextbird
+
 try:
     import dotenv
 except ImportError:
@@ -27,9 +28,11 @@ async def test_some_asyncio_code():
         vc = await channel.connect(cls=dextbird.VoiceClient)
         logger.info("Playing music")
         wait_finished = asyncio.Event()
+
         def after():
             logger.info("Finished to play music")
             wait_finished.set()
+
         await vc.deafen(True)
         track = await vc.ytdl("https://youtu.be/fE9trKOuT3Q")
         track.after(after)
