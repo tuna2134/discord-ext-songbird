@@ -1,10 +1,27 @@
+[tool.poetry]
+name = "dextbird"
+version = "v0.1.0"
+description = "dextbird poetry description"
+authors = ["tuna2134"]
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+discord-py = "^2.3.2"
+maturin = {extras = ["patchelf"], version = "^1.2.3"}
+
+[tool.poetry.group.dev.dependencies]
+maturin = "^1.2.3"
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+yt-dlp = "^2023.7.6"
+
 [build-system]
 requires = ["maturin>=1.2,<2.0"]
 build-backend = "maturin"
 
 [project]
 name = "dextbird"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
