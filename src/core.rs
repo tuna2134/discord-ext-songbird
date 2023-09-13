@@ -145,7 +145,7 @@ impl Core {
         })
     }
 
-    pub fn stop<'a>(&'a self, py: Python<'a>) -> PyResult<()> {
+    pub fn stop<'a>(&'a self) -> PyResult<()> {
         let call = Arc::clone(&self.call);
         let mut call = call.blocking_lock();
         call.stop();
