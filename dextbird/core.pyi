@@ -24,5 +24,35 @@ class Core:
     async def ytdl(self, url: str) -> Track:
         "Play youtube video's mp3"
 
-    async def source(self, data: bytes, opus: bool) -> Track:
+    def source(self, data: bytes, opus: bool) -> Track:
         "Play bytes data"
+    
+    async def deafen(self, deaf: bool) -> None:
+        "Deaf bot"
+
+    async def mute(self, mute: bool) -> None:
+        "Mute bot"
+
+    async def leave(self) -> None:
+        "Leave bot from vc"
+    
+    def stop(self) -> None:
+        "Stop music"
+
+
+class Track:
+
+    def play(self) -> None:
+        "Play some music"
+
+    def set_volume(self, volue: float) -> None:
+        "Set client volume"
+
+    def after(self, func: Callable[[], None]) -> None:
+        "Set event that call after when the track stop"
+    
+    def pause(self) -> None:
+        "Pause the track"
+
+    def stop(self) -> None:
+        "Stop the track"

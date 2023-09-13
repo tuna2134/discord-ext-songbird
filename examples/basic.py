@@ -1,5 +1,11 @@
 from dextbird import VoiceClient
 import discord
+try:
+    import dotenv
+except ImportError:
+    pass
+else:
+    dotenv.load_dotenv()
 
 import os
 import logging
@@ -10,7 +16,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     if message.content == "!join":
         vc = await message.author.voice.channel.connect(cls=VoiceClient)
     elif message.content == "!play":
