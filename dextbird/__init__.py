@@ -22,7 +22,7 @@ class VoiceClient(discord.VoiceProtocol):
         self, *, self_deaf: bool = False, self_mute: bool = False, **kwargs
     ) -> None:
         "Connect to voice channel"
-        self._core = await setup(self.client, self.guild.id, self.client.user.id)
+        self._core = await Core.setup(self.client, self.guild.id, self.client.user.id)
         await self._core.join(self.channel.id)
 
         await self.voice_state_event.wait()

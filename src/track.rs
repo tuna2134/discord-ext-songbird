@@ -29,6 +29,14 @@ pub struct Track {
     pub handle: Arc<TrackHandle>,
 }
 
+impl Track {
+    pub fn from_handle(track_handle: Arc<TrackHandle>) -> Self {
+        Self {
+            handle: track_handle,
+        }
+    }
+}
+
 #[pymethods]
 impl Track {
     pub fn play(&self) -> PyResult<()> {
