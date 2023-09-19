@@ -24,8 +24,11 @@ jobs:
           ~/.cargo/git/db/
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
-    - name: Install maturin
-      run: pip install maturin
+    - name: Install dependency
+      run: |
+        pip install poetry
+        poetry config virtualenvs.create false
+        poetry install
     - name: Compile dextbird
       run: maturin build -o dist && pip install dist/*.whl
     - name: Install pytest
