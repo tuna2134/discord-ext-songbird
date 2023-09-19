@@ -13,6 +13,7 @@ use pyo3::create_exception;
 
 create_exception!(dextbird, SetupError, pyo3::exceptions::PyException);
 create_exception!(dextbird, JoinError, pyo3::exceptions::PyException);
+create_exception!(dextbird, ConnectionError, pyo3::exceptions::PyException);
 
 // Setup VoiceClient Core
 #[pyfunction]
@@ -77,8 +78,14 @@ impl Core {
             let mut call = call.lock().await;
             if call.current_connection().is_some() {
                 let info = call.current_connection().unwrap().clone();
-                call.connect(info).await.unwrap();
-                log::info!("Connected");
+                let result = match call.connect(info).await {
+                    Ok(_) => {
+                        log::info!("Connected");
+                        Ok(())
+                    }
+                    Err(err) => Err(ConnectionError::new_err(err.to_string()))
+                };
+                result?
             }
             Ok(())
         })
