@@ -20,7 +20,6 @@ logging.getLogger().setLevel(logging.INFO)
 @bot.command()
 async def join(ctx: commands.Context) -> None:
     vc = await ctx.author.voice.channel.connect(cls=VoiceClient)
-    print(vc._core)
     await ctx.reply("Joined to vc")
     
     
@@ -31,7 +30,6 @@ async def play(ctx: commands.Context, url: str = "https://youtu.be/Vi-1402wYtI")
     track = await ctx.voice_client.ytdl(url)
     track.after(after)
     track.play()
-    print(track)
     await ctx.reply("Play some music")
 
 @bot.command()

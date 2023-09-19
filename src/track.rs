@@ -1,10 +1,14 @@
 use songbird::tracks::TrackHandle;
 use songbird::events::{EventHandler, EventContext, Event, TrackEvent};
+use songbird::error::TrackResult;
 use pyo3::prelude::*;
 use pyo3::PyObject;
+use pyo3::create_exception;
 use async_trait::async_trait;
 use std::sync::Arc;
 use std::thread;
+
+create_exception!(dextbird, TrackError, pyo3::exceptions::PyException);
 
 pub struct TrackAfterEvent {
     after_func: Arc<PyObject>,
@@ -24,6 +28,13 @@ impl EventHandler for TrackAfterEvent {
     }
 }
 
+fn convert_error<T>(result: TrackResult<T>) -> PyResult<T> {
+    match result {
+        Ok(r) => Ok(r),
+        Err(err) => Err(TrackError::new_err(err.to_string()))
+    }
+}
+
 #[pyclass]
 pub struct Track {
     pub handle: Arc<TrackHandle>,
@@ -40,22 +51,22 @@ impl Track {
 #[pymethods]
 impl Track {
     pub fn play(&self) -> PyResult<()> {
-        self.handle.play().unwrap();
+        convert_error(self.handle.play())?;
         Ok(())
     }
 
     pub fn enable_loop(&self) -> PyResult<()> {
-        self.handle.enable_loop().unwrap();
+        convert_error(self.handle.enable_loop())?;
         Ok(())
     }
 
     pub fn disable_loop(&self) -> PyResult<()> {
-        self.handle.disable_loop().unwrap();
+        convert_error(self.handle.disable_loop())?;
         Ok(())
     }
 
     pub fn set_volume(&self, volume: f32) -> PyResult<()> {
-        self.handle.set_volume(volume).unwrap();
+        convert_error(self.handle.set_volume(volume))?;
         Ok(())
     }
 
@@ -63,17 +74,17 @@ impl Track {
         let after_event = TrackAfterEvent {
             after_func: after_func.into(),
         };
-        self.handle.add_event(Event::Track(TrackEvent::End), after_event).unwrap();
+        convert_error(self.handle.add_event(Event::Track(TrackEvent::End), after_event))?;
         Ok(())
     }
 
     pub fn pause(&self) -> PyResult<()> {
-        self.handle.pause().unwrap();
+        convert_error(self.handle.pause())?;
         Ok(())
     }
 
     pub fn stop(&self) -> PyResult<()> {
-        self.handle.stop().unwrap();
+        convert_error(self.handle.stop())?;
         Ok(())
     }
 }
