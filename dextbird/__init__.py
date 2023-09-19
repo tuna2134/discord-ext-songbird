@@ -6,7 +6,18 @@ from typing import Optional, Union
 
 
 class VoiceClient(discord.VoiceProtocol):
-    "discord.py extensions voiceclient"
+    """
+    discord.py extensions voiceclient
+
+    Attributes
+    ----------
+    channel : Union[discord.VoiceChannel, discord.StageChannel]
+        Discord VoiceChannel
+    client : discord.Client
+        Discord.py client instance
+    connected : bool
+        When the client is connecting to vc, it returns `True`
+    """
     channel: Union[discord.VoiceChannel, discord.StageChannel]
 
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
@@ -21,7 +32,6 @@ class VoiceClient(discord.VoiceProtocol):
     async def connect(
         self, *, self_deaf: bool = False, self_mute: bool = False, **kwargs
     ) -> None:
-        "Connect to voice channel"
         self._core = await Core.setup(self.client, self.guild.id, self.client.user.id)
         await self._core.join(self.channel.id)
 
@@ -31,21 +41,33 @@ class VoiceClient(discord.VoiceProtocol):
         self.connected = True
 
     async def on_voice_server_update(self, data: dict) -> None:
-        "Update voice server"
         await self._core.update_server(data["endpoint"], data["token"])
         self.voice_server_event.set()
 
     async def on_voice_state_update(self, data: dict) -> None:
-        "Update voice state"
         await self._core.update_state(data["session_id"], data.get("channel_id"))
         self.voice_state_event.set()
 
     async def ytdl(self, url: str) -> Track:
-        "Play music by yt-dlp"
+        """
+        Play music by yt-dlp
+        
+        Parameters
+        ----------
+        url : str
+            YouTube video url
+        """
         return await self._core.ytdl(url)
 
     def source(self, data: bytes, *, opus: bool = False) -> Track:
-        "Play music from bytes"
+        """
+        Play music from bytes
+        
+        Parameters
+        ----------
+        data : bytes
+            Voice data
+        """
         return self._core.source(data, opus)
 
     def stop(self) -> None:
