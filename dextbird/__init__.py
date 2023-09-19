@@ -1,5 +1,5 @@
 import discord
-from .dextbird import Core, setup, Track
+from .dextbird import Core, Track
 
 import asyncio
 from typing import Optional, Union
