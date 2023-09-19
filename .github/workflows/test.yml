@@ -27,10 +27,9 @@ jobs:
     - name: Install dependency
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
-        poetry config virtualenvs.create false
         poetry install --no-ansi
     - name: Compile dextbird
-      run: maturin build -o dist && pip install dist/*.whl
+      run: poetry run maturin dev
     - name: Install pytest
       run: pip install pytest pytest-asyncio
     - name: Install ffmpeg
@@ -38,7 +37,7 @@ jobs:
     - name: Install bot dependiences
       run: pip install discord.py yt-dlp
     - name: Test library
-      run: pytest -s --log-cli-level=INFO
+      run: poetry run pytest -s --log-cli-level=INFO
       env:
         TOKEN: ${{secrets.TOKEN}}
         RUST_BACKTRACE: full
