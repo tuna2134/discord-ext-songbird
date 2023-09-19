@@ -10,6 +10,19 @@ use std::thread;
 
 create_exception!(dextbird, TrackError, pyo3::exceptions::PyException);
 
+pub fn register_error(py: Python, m: &PyModule) -> PyResult<()> {
+    m.add("TrackError", py.get_type::<TrackError>())?;
+
+    Ok(())
+}
+
+fn convert_error<T>(result: TrackResult<T>) -> PyResult<T> {
+    match result {
+        Ok(r) => Ok(r),
+        Err(err) => Err(TrackError::new_err(err.to_string())),
+    }
+}
+
 pub struct TrackAfterEvent {
     after_func: Arc<PyObject>,
 }
@@ -25,13 +38,6 @@ impl EventHandler for TrackAfterEvent {
             });
         });
         return None;
-    }
-}
-
-fn convert_error<T>(result: TrackResult<T>) -> PyResult<T> {
-    match result {
-        Ok(r) => Ok(r),
-        Err(err) => Err(TrackError::new_err(err.to_string())),
     }
 }
 

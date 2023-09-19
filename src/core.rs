@@ -15,19 +15,11 @@ create_exception!(dextbird, SetupError, pyo3::exceptions::PyException);
 create_exception!(dextbird, JoinError, pyo3::exceptions::PyException);
 create_exception!(dextbird, ConnectionError, pyo3::exceptions::PyException);
 
-// Setup VoiceClient Core
-#[pyfunction]
-pub fn setup(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
-    let shard = Shard::Generic(Arc::new(VoiceUpdate {
-        client: client.as_ref(py).clone().into(),
-    }));
-    pyo3_asyncio::tokio::future_into_py(py, async move {
-        let call = Call::new(GuildId(guild_id), shard, UserId(user_id));
-        log::info!("Setup end");
-        Ok(Core {
-            call: Arc::new(Mutex::new(call)),
-        })
-    })
+pub fn register_error(py: Python, m: &PyModule) -> PyResult<()> {
+    m.add("SetupError", py.get_type::<SetupError>())?;
+    m.add("JoinError", py.get_type::<JoinError>())?;
+    m.add("ConnectionError", py.get_type::<ConnectionError>())?;
+    Ok(())
 }
 
 fn convert_error<T>(result: JoinResult<T>) -> Result<T, PyErr> {
@@ -49,6 +41,7 @@ impl Core {
         Err(SetupError::new_err("Use create function"))
     }
 
+    // Setup core and songbird
     #[staticmethod]
     pub fn setup(py: Python, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
         let shard = Shard::Generic(Arc::new(VoiceUpdate {

@@ -2,10 +2,10 @@ from typing import Optional, Callable
 
 from discord import Client
 
-async def setup(client: Client, guild_id: int, user_id: int) -> Core:
-    "Setup core"
-
 class Core:
+    @staticmethod
+    async def setup(client: Client, guild_id: int, user_id: int) -> Core:
+        "Return setup"
     async def join(self, channel_id: int) -> None:
         "Join to vc"
     async def connect(self) -> None:
