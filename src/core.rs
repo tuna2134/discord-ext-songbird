@@ -1,15 +1,15 @@
-use crate::update_voice_state::VoiceUpdate;
 use crate::track;
+use crate::update_voice_state::VoiceUpdate;
+use pyo3::create_exception;
 use pyo3::prelude::*;
+use songbird::error::JoinResult;
 use songbird::id::{ChannelId, GuildId, UserId};
 use songbird::input;
 use songbird::shards::Shard;
 use songbird::ytdl;
 use songbird::Call;
-use songbird::error::JoinResult;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use pyo3::create_exception;
 
 create_exception!(dextbird, SetupError, pyo3::exceptions::PyException);
 create_exception!(dextbird, JoinError, pyo3::exceptions::PyException);
@@ -33,7 +33,7 @@ pub fn setup(py: Python<'_>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> 
 fn convert_error<T>(result: JoinResult<T>) -> Result<T, PyErr> {
     match result {
         Ok(result) => Ok(result),
-        Err(err) => Err(JoinError::new_err(err.to_string()))
+        Err(err) => Err(JoinError::new_err(err.to_string())),
     }
 }
 
@@ -83,7 +83,7 @@ impl Core {
                         log::info!("Connected");
                         Ok(())
                     }
-                    Err(err) => Err(ConnectionError::new_err(err.to_string()))
+                    Err(err) => Err(ConnectionError::new_err(err.to_string())),
                 };
                 result?
             }
@@ -149,7 +149,9 @@ impl Core {
             input::Container::Raw,
             None,
         );
-        Ok(track::Track::from_handle(call.play_source(input_source).into()))
+        Ok(track::Track::from_handle(
+            call.play_source(input_source).into(),
+        ))
     }
 
     pub fn deafen<'a>(&'a self, py: Python<'a>, deaf: bool) -> PyResult<&PyAny> {

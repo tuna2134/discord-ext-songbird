@@ -1,10 +1,10 @@
-use songbird::tracks::TrackHandle;
-use songbird::events::{EventHandler, EventContext, Event, TrackEvent};
-use songbird::error::TrackResult;
+use async_trait::async_trait;
+use pyo3::create_exception;
 use pyo3::prelude::*;
 use pyo3::PyObject;
-use pyo3::create_exception;
-use async_trait::async_trait;
+use songbird::error::TrackResult;
+use songbird::events::{Event, EventContext, EventHandler, TrackEvent};
+use songbird::tracks::TrackHandle;
 use std::sync::Arc;
 use std::thread;
 
@@ -31,7 +31,7 @@ impl EventHandler for TrackAfterEvent {
 fn convert_error<T>(result: TrackResult<T>) -> PyResult<T> {
     match result {
         Ok(r) => Ok(r),
-        Err(err) => Err(TrackError::new_err(err.to_string()))
+        Err(err) => Err(TrackError::new_err(err.to_string())),
     }
 }
 
@@ -74,7 +74,10 @@ impl Track {
         let after_event = TrackAfterEvent {
             after_func: after_func.into(),
         };
-        convert_error(self.handle.add_event(Event::Track(TrackEvent::End), after_event))?;
+        convert_error(
+            self.handle
+                .add_event(Event::Track(TrackEvent::End), after_event),
+        )?;
         Ok(())
     }
 

@@ -16,10 +16,8 @@ async fn update_voice_state(
         option.set_item("channel_id", channel_id)?;
         option.set_item("self_deaf", self_deaf)?;
         option.set_item("self_mute", self_mute)?;
-        let uvc_func = pyo3_asyncio::tokio::into_future(
-            plug.call_method1("update_voice_state", (client, option))?,
-        );
-        uvc_func
+
+        pyo3_asyncio::tokio::into_future(plug.call_method1("update_voice_state", (client, option))?)
     });
     result.unwrap().await?;
     Ok(())
