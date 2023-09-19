@@ -36,4 +36,3 @@ jobs:
       run: poetry run pytest -s --log-cli-level=INFO
       env:
         TOKEN: ${{secrets.TOKEN}}
-        RUST_BACKTRACE: full

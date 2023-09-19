@@ -50,7 +50,7 @@ impl Core {
     }
 
     #[staticmethod]
-    pub fn setup<'a>(py: Python<'a>, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
+    pub fn setup(py: Python, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
         let shard = Shard::Generic(Arc::new(VoiceUpdate {
             client: client.as_ref(py).clone().into(),
         }));
@@ -135,7 +135,7 @@ impl Core {
         })
     }
 
-    pub fn source<'a>(&'a self, data: Vec<u8>, opus: bool) -> PyResult<track::Track> {
+    pub fn source(&self, data: Vec<u8>, opus: bool) -> PyResult<track::Track> {
         let call = Arc::clone(&self.call);
         let mut call = call.blocking_lock();
         let mut codec = input::Codec::Pcm;
@@ -182,7 +182,7 @@ impl Core {
         })
     }
 
-    pub fn stop<'a>(&'a self) -> PyResult<()> {
+    pub fn stop(&self) -> PyResult<()> {
         let call = Arc::clone(&self.call);
         let mut call = call.blocking_lock();
         call.stop();
