@@ -9,6 +9,10 @@ class Option(TypedDict):
     self_mute: bool
 
 
+class GuildNotFoundError(Exception):
+    pass
+
+
 async def update_voice_state(client: discord.Client, option: Option) -> None:
     guild: Optional[discord.Guild] = client.get_guild(option["guild_id"])
     if guild is not None:
@@ -21,4 +25,4 @@ async def update_voice_state(client: discord.Client, option: Option) -> None:
             self_mute=option["self_mute"],
         )
     else:
-        raise Exception("I can't found guild'")
+        raise GuildNotFoundError("I can't found guild'")
