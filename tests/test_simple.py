@@ -40,7 +40,7 @@ async def test_some_asyncio_code():
         logger.info("Waiting to finish some music")
         try:
             await asyncio.wait_for(wait_finished.wait(), timeout=60 * 5)
-        except TimeoutError:
+        except asyncio.TimeoutError:
             logger.error("Timeout to wait playing music")
         logger.info("Disconnect from vc")
         await vc.disconnect()
