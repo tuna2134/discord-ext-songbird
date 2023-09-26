@@ -1,5 +1,5 @@
 import discord
-from .dextbird import Core, Track
+from .dextbird import Core, Track, Driver
 
 import asyncio
 from typing import Optional, Union
@@ -24,6 +24,7 @@ class VoiceClient(discord.VoiceProtocol):
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self._core: Optional[Core] = None
         self.client = client
+        self.driver = Driver()
         self.voice_server_event = asyncio.Event()
         self.voice_state_event = asyncio.Event()
         self.connected: bool = False
