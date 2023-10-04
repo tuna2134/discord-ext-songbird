@@ -138,7 +138,6 @@ impl Core {
         Ok(())
     }
 
-    
     pub fn ytdl<'a>(&'a self, py: Python<'a>, url: String) -> PyResult<&PyAny> {
         let driver = Arc::clone(&self.driver);
         pyo3_asyncio::tokio::future_into_py(py, async move {

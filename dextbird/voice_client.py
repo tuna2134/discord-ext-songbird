@@ -75,7 +75,7 @@ class VoiceClient(discord.VoiceProtocol):
         "Stop to play music"
         self._core.stop()
 
-    async def disconnect(self, *, force: bool=True) -> None:
+    async def disconnect(self, *, force: bool = True) -> None:
         "Disconnect from voice channel"
         if force:
             await self._core.leave()
