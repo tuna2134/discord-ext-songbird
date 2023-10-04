@@ -1,5 +1,5 @@
 use crate::track;
-use crate::update_voice_state::VoiceUpdate;
+// use crate::update_voice_state::VoiceUpdate;
 use pyo3::create_exception;
 use pyo3::prelude::*;
 use songbird::error::JoinResult;
@@ -7,7 +7,8 @@ use songbird::id::{ChannelId, GuildId, UserId};
 use songbird::input;
 use songbird::shards::Shard;
 use songbird::ytdl;
-use songbird::Call;
+use songbird::Config;
+use songbird::Driver;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -29,9 +30,19 @@ fn convert_error<T>(result: JoinResult<T>) -> Result<T, PyErr> {
     }
 }
 
+struct ConnectionInfo {
+    pub channel_id: Option<ChannelId>,
+    pub endpoint: Option<String>,
+    pub guild_id: GuildId,
+    pub session_id: Option<String>,
+    pub token: Option<String>,
+    pub user_id: UserId,
+}
+
 #[pyclass]
 pub struct Core {
-    call: Arc<Mutex<Call>>,
+    driver: Arc<Mutex<Driver>>,
+    conn_info: Arc<Mutex<ConnectionInfo>>,
 }
 
 #[pymethods]
@@ -43,91 +54,102 @@ impl Core {
 
     // Setup core and songbird
     #[staticmethod]
-    pub fn setup(py: Python, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
-        let shard = Shard::Generic(Arc::new(VoiceUpdate {
-            client: client.as_ref(py).clone().into(),
-        }));
+    pub fn setup(py: Python, user_id: u64, guild_id: u64) -> PyResult<&PyAny> {
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let call = Call::new(GuildId(guild_id), shard, UserId(user_id));
+            let driver = Driver::new(Config::default());
             log::info!("Setup end");
             Ok(Self {
-                call: Arc::new(Mutex::new(call)),
+                driver: Arc::new(Mutex::new(driver)),
+                conn_info: Arc::new(Mutex::new(ConnectionInfo {
+                    channel_id: None,
+                    endpoint: None,
+                    guild_id: GuildId(guild_id),
+                    user_id: UserId(user_id),
+                    session_id: None,
+                    token: None,
+                })),
             })
         })
     }
 
+    /*
     pub fn join<'a>(&'a self, py: Python<'a>, channel_id: u64) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
+        let conn_info = Arc
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             convert_error(call.join(ChannelId(channel_id)).await)?;
-            Ok(())
-        })
-    }
+    */
 
     pub fn connect<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
-        let call = Arc::clone(&self.call);
+        let driver = Arc::clone(&self.driver);
+        let conn_info = Arc::clone(&self.conn_info);
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let mut call = call.lock().await;
-            if call.current_connection().is_some() {
-                let info = call.current_connection().unwrap().clone();
-                let result = match call.connect(info).await {
-                    Ok(_) => {
-                        log::info!("Connected");
-                        Ok(())
-                    }
-                    Err(err) => Err(ConnectionError::new_err(err.to_string())),
-                };
-                result?
-            }
-            Ok(())
+            let conn_info = conn_info.lock().await;
+            let conn_info = songbird::ConnectionInfo {
+                channel_id: conn_info.channel_id,
+                endpoint: conn_info.endpoint.clone().unwrap(),
+                guild_id: conn_info.guild_id,
+                session_id: conn_info.session_id.clone().unwrap(),
+                token: conn_info.token.clone().unwrap(),
+                user_id: conn_info.user_id,
+            };
+            let mut driver = driver.lock().await;
+            let result = match driver.connect(conn_info).await {
+                Ok(_) => {
+                    log::info!("Connected");
+                    Ok(())
+                }
+                Err(err) => Err(ConnectionError::new_err(err.to_string())),
+            };
+            result
         })
     }
 
-    pub fn update_server<'a>(
-        &'a self,
-        py: Python<'a>,
-        endpoint: String,
-        token: String,
-    ) -> PyResult<&PyAny> {
-        let call = Arc::clone(&self.call);
-        pyo3_asyncio::tokio::future_into_py(py, async move {
-            let mut call = call.lock().await;
-            call.update_server(endpoint, token);
-            log::info!("Update server");
-            Ok(())
-        })
+    pub fn update_server(&self, endpoint: String, token: String) -> PyResult<()> {
+        let mut conn_info = self.conn_info.blocking_lock();
+        conn_info.token = Some(token);
+        conn_info.endpoint = Some(endpoint);
+        Ok(())
     }
 
-    pub fn update_state<'a>(
-        &'a self,
-        py: Python<'a>,
+    pub fn update_state(
+        &self,
+        py: Python,
         session_id: String,
         channel_id: Option<String>,
-    ) -> PyResult<&PyAny> {
-        let call = Arc::clone(&self.call);
+    ) -> PyResult<()> {
+        let call = Arc::clone(&self.driver);
         let mut channelid = None;
         if let Some(chid) = channel_id {
             channelid = Some(ChannelId(chid.parse::<u64>().unwrap()))
         }
+        let mut conn_info = self.conn_info.blocking_lock();
+        conn_info.channel_id = channelid;
+        conn_info.session_id = Some(session_id);
+        /*
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_state(session_id, channelid);
             log::info!("Update voice state");
             Ok(())
         })
+        */
+        Ok(())
     }
 
+    
     pub fn ytdl<'a>(&'a self, py: Python<'a>, url: String) -> PyResult<&PyAny> {
-        let call = Arc::clone(&self.call);
+        let driver = Arc::clone(&self.driver);
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let mut call = call.lock().await;
+            let mut driver = driver.lock().await;
             let input = ytdl(&url).await.unwrap();
-            let track = call.play_source(input);
+            let track = driver.play_source(input);
             Ok(track::Track::from_handle(track.into()))
         })
     }
 
+    /*
     pub fn source(&self, data: Vec<u8>, opus: bool) -> PyResult<track::Track> {
         let call = Arc::clone(&self.call);
         let mut call = call.blocking_lock();
@@ -165,23 +187,24 @@ impl Core {
             log::info!("Connection is now mute");
             Ok(())
         })
-    }
+    }*/
 
     pub fn leave<'a>(&'a self, py: Python<'a>) -> PyResult<&PyAny> {
-        let call = Arc::clone(&self.call);
+        let driver = Arc::clone(&self.driver);
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let mut call = call.lock().await;
-            convert_error(call.leave().await)?;
+            let mut driver = driver.lock().await;
+            driver.leave();
             log::info!("Leave from vc");
             Ok(())
         })
     }
 
-    pub fn stop(&self) -> PyResult<()> {
+    /*pub fn stop(&self) -> PyResult<()> {
         let call = Arc::clone(&self.call);
         let mut call = call.blocking_lock();
         call.stop();
         log::info!("Stop to play voice");
         Ok(())
     }
+    */
 }

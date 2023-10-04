@@ -33,8 +33,8 @@ class VoiceClient(discord.VoiceProtocol):
     async def connect(
         self, *, self_deaf: bool = False, self_mute: bool = False, **kwargs
     ) -> None:
-        self._core = await Core.setup(self.client, self.guild.id, self.client.user.id)
-        await self._core.join(self.channel.id)
+        self._core = await Core.setup(self.client.user.id, self.guild.id)
+        await self.guild.change_voice_state(channel=self.channel)
 
         await self.voice_state_event.wait()
         await self.voice_server_event.wait()
@@ -42,11 +42,11 @@ class VoiceClient(discord.VoiceProtocol):
         self.connected = True
 
     async def on_voice_server_update(self, data: dict) -> None:
-        await self._core.update_server(data["endpoint"], data["token"])
+        self._core.update_server(data["endpoint"], data["token"])
         self.voice_server_event.set()
 
     async def on_voice_state_update(self, data: dict) -> None:
-        await self._core.update_state(data["session_id"], data.get("channel_id"))
+        self._core.update_state(data["session_id"], data.get("channel_id"))
         self.voice_state_event.set()
 
     async def ytdl(self, url: str) -> Track:
@@ -75,9 +75,11 @@ class VoiceClient(discord.VoiceProtocol):
         "Stop to play music"
         self._core.stop()
 
-    async def disconnect(self, *args) -> None:
+    async def disconnect(self, *, force: bool=True) -> None:
         "Disconnect from voice channel"
-        await self._core.leave()
+        if force:
+            await self._core.leave()
+        await guild.change_voice_state(channel=None)
         self._core = None
         self.connected = False
         self.cleanup()
