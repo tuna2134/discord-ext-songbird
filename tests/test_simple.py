@@ -44,7 +44,7 @@ async def test_some_asyncio_code():
             logger.error("Timeout to wait playing music")
         logger.info("Disconnect from vc")
         await vc.disconnect()
-        await asyncio.sleep(2)
+        # await asyncio.sleep(2)
         logger.info("Finishing test")
         await client.close()
 
