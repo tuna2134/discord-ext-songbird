@@ -37,11 +37,12 @@ impl songbird::shards::VoiceUpdate for VoiceUpdate {
         self_mute: bool,
     ) -> JoinResult<()> {
         let client = self.client.clone();
-        let mut ch_id = None;
-        if let Some(cid) = channel_id {
-            ch_id = Some(cid.0);
-        }
-        let uvc_func = update_voice_state(client, guild_id.0, ch_id, self_deaf, self_mute);
+        let mut ch_id = if let Some(cid) = channel_id {
+            Some(cid.0.into())
+        } else {
+            None
+        };
+        let uvc_func = update_voice_state(client, guild_id.0.into(), ch_id, self_deaf, self_mute);
         uvc_func.await.unwrap();
         Ok(())
     }

@@ -2,12 +2,14 @@ use crate::track;
 use crate::update_voice_state::VoiceUpdate;
 use pyo3::create_exception;
 use pyo3::prelude::*;
+use reqwest::Client;
 use songbird::error::JoinResult;
 use songbird::id::{ChannelId, GuildId, UserId};
 use songbird::input;
+use songbird::input::YoutubeDl;
 use songbird::shards::Shard;
-use songbird::ytdl;
 use songbird::Call;
+use std::num::NonZeroU64;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -48,7 +50,11 @@ impl Core {
             client: client.as_ref(py).clone().into(),
         }));
         pyo3_asyncio::tokio::future_into_py(py, async move {
-            let call = Call::new(GuildId(guild_id), shard, UserId(user_id));
+            let call = Call::new(
+                GuildId(NonZeroU64::new(guild_id).unwrap()),
+                shard,
+                UserId(NonZeroU64::new(user_id).unwrap()),
+            );
             log::info!("Setup end");
             Ok(Self {
                 call: Arc::new(Mutex::new(call)),
@@ -60,7 +66,10 @@ impl Core {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
-            convert_error(call.join(ChannelId(channel_id)).await)?;
+            convert_error(
+                call.join(ChannelId(NonZeroU64::new(channel_id).unwrap()))
+                    .await,
+            )?;
             Ok(())
         })
     }
@@ -106,10 +115,13 @@ impl Core {
         channel_id: Option<String>,
     ) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
-        let mut channelid = None;
-        if let Some(chid) = channel_id {
-            channelid = Some(ChannelId(chid.parse::<u64>().unwrap()))
-        }
+        let mut channelid = if let Some(chid) = channel_id {
+            Some(ChannelId(
+                NonZeroU64::new(chid.parse::<u64>().unwrap()).unwrap(),
+            ))
+        } else {
+            None
+        };
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
             call.update_state(session_id, channelid);
@@ -122,15 +134,16 @@ impl Core {
         let call = Arc::clone(&self.call);
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let mut call = call.lock().await;
-            let input = ytdl(&url).await.unwrap();
-            let track = call.play_source(input);
+            let input = YoutubeDl::new(Client::new(), url);
+            let track = call.play_input(input.into());
             Ok(track::Track::from_handle(track.into()))
         })
     }
 
-    pub fn source(&self, data: Vec<u8>, opus: bool) -> PyResult<track::Track> {
+    pub fn source(&self, data: Vec<u8>) -> PyResult<track::Track> {
         let call = Arc::clone(&self.call);
         let mut call = call.blocking_lock();
+        /*
         let mut codec = input::Codec::Pcm;
         if opus {
             codec = input::Codec::Opus(input::codec::OpusDecoderState::new().unwrap());
@@ -142,8 +155,9 @@ impl Core {
             input::Container::Raw,
             None,
         );
+        */
         Ok(track::Track::from_handle(
-            call.play_source(input_source).into(),
+            call.play_input(data.into()).into(),
         ))
     }
 
@@ -183,5 +197,19 @@ impl Core {
         call.stop();
         log::info!("Stop to play voice");
         Ok(())
+    }
+}
+
+impl Drop for Core {
+    fn drop(&mut self) {
+        let rt = pyo3_asyncio::tokio::get_runtime();
+        let call = Arc::clone(&self.call);
+        let leave = rt.block_on(async move {
+            let mut call = call.blocking_lock();
+            if call.leave().await.is_ok() {
+                log::info!("Leave from something")
+            }
+        });
+        drop(rt);
     }
 }
