@@ -5,7 +5,7 @@ use pyo3::prelude::*;
 use reqwest::Client;
 use songbird::error::JoinResult;
 use songbird::id::{ChannelId, GuildId, UserId};
-use songbird::input;
+
 use songbird::input::YoutubeDl;
 use songbird::shards::Shard;
 use songbird::Call;
@@ -47,7 +47,7 @@ impl Core {
     #[staticmethod]
     pub fn setup(py: Python, client: Py<PyAny>, guild_id: u64, user_id: u64) -> PyResult<&PyAny> {
         let shard = Shard::Generic(Arc::new(VoiceUpdate {
-            client: client.as_ref(py).clone().into(),
+            client: client.as_ref(py).into(),
         }));
         pyo3_asyncio::tokio::future_into_py(py, async move {
             let call = Call::new(
@@ -115,7 +115,7 @@ impl Core {
         channel_id: Option<String>,
     ) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
-        let mut channelid = if let Some(chid) = channel_id {
+        let channelid = if let Some(chid) = channel_id {
             Some(ChannelId(
                 NonZeroU64::new(chid.parse::<u64>().unwrap()).unwrap(),
             ))
@@ -132,10 +132,14 @@ impl Core {
 
     pub fn ytdl<'a>(&'a self, py: Python<'a>, url: String) -> PyResult<&PyAny> {
         let call = Arc::clone(&self.call);
+        log::info!("Starting player");
         pyo3_asyncio::tokio::future_into_py(py, async move {
+            log::info!("Waiting call lock");
             let mut call = call.lock().await;
+            log::info!("Create yotuube");
             let input = YoutubeDl::new(Client::new(), url);
-            let track = call.play_input(input.into());
+            let track = call.play_input(input.clone().into());
+            log::info!("Play it");
             Ok(track::Track::from_handle(track.into()))
         })
     }
@@ -204,12 +208,13 @@ impl Drop for Core {
     fn drop(&mut self) {
         let rt = pyo3_asyncio::tokio::get_runtime();
         let call = Arc::clone(&self.call);
-        let leave = rt.block_on(async move {
+        let _leave = rt.block_on(async move {
             let mut call = call.blocking_lock();
             if call.leave().await.is_ok() {
                 log::info!("Leave from something")
             }
         });
         drop(rt);
+        println!("Drop it");
     }
 }

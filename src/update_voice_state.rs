@@ -37,7 +37,7 @@ impl songbird::shards::VoiceUpdate for VoiceUpdate {
         self_mute: bool,
     ) -> JoinResult<()> {
         let client = self.client.clone();
-        let mut ch_id = if let Some(cid) = channel_id {
+        let ch_id = if let Some(cid) = channel_id {
             Some(cid.0.into())
         } else {
             None
