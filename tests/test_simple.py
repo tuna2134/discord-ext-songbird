@@ -51,4 +51,4 @@ async def test_some_asyncio_code():
         await client.close()
 
     async with client:
-        await client.start(os.getenv("TOKEN"))
+        await client.start(os.getenv("DISCORD_TOKEN"))
