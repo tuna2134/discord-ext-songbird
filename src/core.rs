@@ -214,7 +214,6 @@ impl Drop for Core {
                 log::info!("Leave from something")
             }
         });
-        drop(rt);
         println!("Drop it");
     }
 }
