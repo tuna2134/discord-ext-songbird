@@ -208,7 +208,7 @@ impl Drop for Core {
     fn drop(&mut self) {
         let rt = pyo3_asyncio::tokio::get_runtime();
         let call = Arc::clone(&self.call);
-        let _leave = rt.block_on(async move {
+        let _leave = rt.spawn_blocking(async move {
             let mut call = call.blocking_lock();
             if call.leave().await.is_ok() {
                 log::info!("Leave from something")
