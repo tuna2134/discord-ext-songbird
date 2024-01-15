@@ -6,6 +6,7 @@ use reqwest::Client;
 use songbird::error::JoinResult;
 use songbird::id::{ChannelId, GuildId, UserId};
 
+use async_dropper::AsyncDrop;
 use songbird::input::YoutubeDl;
 use songbird::shards::Shard;
 use songbird::Call;
@@ -204,16 +205,18 @@ impl Core {
     }
 }
 
-impl Drop for Core {
-    fn drop(&mut self) {
-        let rt = pyo3_asyncio::tokio::get_runtime();
-        let call = Arc::clone(&self.call);
-        let _leave = rt.spawn_blocking(async move {
-            let mut call = call.blocking_lock();
-            if call.leave().await.is_ok() {
-                log::info!("Leave from something")
-            }
-        });
+#[async_trait::async_trait]
+impl AsyncDrop for Core {
+    async fn async_drop<'a>(&'a mut self) {
+        //let rt = pyo3_asyncio::tokio::get_runtime();
+        //let call = Arc::clone(&self.call);
+        //let _leave = rt.spawn_blocking(async move {
+        log::info!("Dropping...");
+        let mut call = self.call.lock().await;
+        if call.leave().await.is_ok() {
+            log::info!("Leave from something")
+        }
+        //});
         println!("Drop it");
     }
 }

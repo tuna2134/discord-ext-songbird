@@ -10,6 +10,7 @@ name = "dextbird"
 crate-type = ["cdylib"]
 
 [dependencies]
+async-dropper = { version = "0.3.1", features = ["tokio", "simple"] }
 async-trait = "0.1.77"
 log = "0.4.20"
 pyo3 = "0.20.1"
