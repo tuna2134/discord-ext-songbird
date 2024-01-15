@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 
-mod core;
+mod driver;
 mod track;
 mod update_voice_state;
 
@@ -9,9 +9,9 @@ mod update_voice_state;
 fn dextbird(py: Python, m: &PyModule) -> PyResult<()> {
     pyo3_log::init();
 
-    m.add_class::<crate::core::Core>()?;
+    m.add_class::<crate::driver::Driver>()?;
     m.add_class::<track::Track>()?;
-    crate::core::register_error(py, m)?;
+    crate::driver::register_error(py, m)?;
     track::register_error(py, m)?;
 
     Ok(())
