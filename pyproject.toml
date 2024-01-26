@@ -14,7 +14,7 @@ yt-dlp = "^2023.7.6"
 python-dotenv = "^1.0.0"
 discord-py = "^2.3.2"
 maturin = {extras = ["patchelf"], version = "^1.2.3"}
-black = "^23.9.1"
+black = "^24.0.0"
 pyright = "^1.1.326"
 pdoc3 = "^0.10.0"
 
