@@ -18,4 +18,4 @@ pyo3-asyncio = { version = "0.20.0", features = ["tokio-runtime"] }
 pyo3-log = "0.9.0"
 reqwest = "0.11.23"
 songbird = { version = "0.4.0", features = ["driver"] }
-tokio = { version = "1.35.1", features = ["sync"] }
+tokio = { version = "1.36.0", features = ["sync"] }
