@@ -13,9 +13,10 @@ crate-type = ["cdylib"]
 async-dropper = { version = "0.3.1", features = ["tokio", "simple"] }
 async-trait = "0.1.77"
 log = "0.4.20"
-pyo3 = "0.21.1"
+pyo3 = "0.20.3"
 pyo3-asyncio = { version = "0.20.0", features = ["tokio-runtime"] }
 pyo3-log = "0.9.0"
 reqwest = "0.11.23"
 songbird = { version = "0.4.1", features = ["driver"] }
+symphonia = { version = "0.5.4", features = ["aac", "mp3", "isomp4", "alac"] }
 tokio = { version = "1.35.1", features = ["sync"] }
