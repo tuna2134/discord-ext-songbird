@@ -33,4 +33,4 @@ jobs:
     - name: Test library
       run: poetry run pytest -s --log-cli-level=INFO
       env:
-        TOKEN: ${{secrets.TOKEN}}
+        DISCORD_TOKEN: ${{secrets.TOKEN}}
