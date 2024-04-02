@@ -13,7 +13,12 @@ import os
 import logging
 
 
-bot = commands.Bot(intents=discord.Intents.all(), command_prefix="!")
+class MyBot(commands.Bot):
+    async def setup_hook(self) -> None:
+        await self.load_extension("jishaku")
+
+
+bot = MyBot(intents=discord.Intents.all(), command_prefix="!")
 logging.getLogger().setLevel(logging.INFO)
 
 
