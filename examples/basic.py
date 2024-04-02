@@ -53,4 +53,4 @@ async def ping(ctx: commands.Context) -> None:
     await ctx.reply(f"Pong! 🏓\n> {round(bot.latency * 1000, 2)}ms")
 
 
-bot.run(os.getenv("TOKEN"))
+bot.run(os.getenv("DISCORD_TOKEN"))
