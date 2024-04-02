@@ -30,8 +30,6 @@ jobs:
         poetry install --no-ansi
     - name: Compile dextbird
       run: poetry run maturin dev
-    - name: Install ffmpeg
-      run: sudo apt-get update && sudo apt-get install -y ffmpeg
     - name: Test library
       run: poetry run pytest -s --log-cli-level=INFO
       env:
