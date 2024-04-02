@@ -19,4 +19,4 @@ pyo3-log = "0.9.0"
 reqwest = "0.11.23"
 songbird = { version = "0.4.1", features = ["driver"] }
 symphonia = { version = "0.5.4", features = ["aac", "mp3", "isomp4", "alac"] }
-tokio = { version = "1.35.1", features = ["sync"] }
+tokio = { version = "1.37.0", features = ["sync"] }
