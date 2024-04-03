@@ -16,12 +16,12 @@ If you are using linux, we are only support this python version.
 ### Why I am not supporting windows?
 It's too hard for me.
 
-## install
+## Install
 ```sh
 pip install "dextbird @ git+https://github.com/tuna2134/discord-ext-songbird.git"
 ```
 
-## sample code
+## Sample code
 ```python
 from dextbird import VoiceClient
 import discord
