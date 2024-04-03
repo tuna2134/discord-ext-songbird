@@ -3,7 +3,7 @@
 
 Songbird is rust voice manager.
 
-This library is wrapping songbird for discord.py
+This library is wrapping songbird for discord.py.
 
 [Document](https://tuna2134.dev/discord-ext-songbird/)
 
