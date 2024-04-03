@@ -32,9 +32,9 @@ jobs:
     - name: Build library
       run: maturin build -r -o dist --target=${{ matrix.target }}
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-${{ matrix.python-version }}-${{ matrix.target }}
         path: dist
 
   sdist:
@@ -49,9 +49,9 @@ jobs:
     - name: Build sdist
       run: maturin sdist -o dist
     - name: Upload sdist
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-sdist
         path: dist
 
   release:
@@ -60,9 +60,10 @@ jobs:
     if: "startsWith(github.ref, 'refs/tags/')"
     needs: [ build, sdist ]
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
-        name: wheels
+        pattern: wheels-*
+        merge-multiple: true
     - name: Release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
