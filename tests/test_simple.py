@@ -12,6 +12,14 @@ else:
 import asyncio
 import os
 import logging
+import random
+
+
+MUSICS = [
+    "https://youtu.be/fE9trKOuT3Q",
+    "https://youtu.be/TG2IgWOjtwU",
+    "https://youtu.be/yL1LYf-S2Q0"
+]
 
 
 client = discord.Client(intents=discord.Intents.all())
@@ -35,7 +43,7 @@ async def test_some_asyncio_code():
 
         await vc.deafen(True)
         logging.info("Deafen")
-        track = await vc.ytdl("https://youtu.be/fE9trKOuT3Q")
+        track = await vc.ytdl(random.choice(MUSICS))
         logging.info("Play youtube")
         track.after(after)
         track.play()
