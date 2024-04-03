@@ -7,8 +7,6 @@ mod update_voice_state;
 /// Core module
 #[pymodule]
 fn dextbird(py: Python, m: &PyModule) -> PyResult<()> {
-    pyo3_log::init();
-
     m.add_class::<crate::core::Core>()?;
     m.add_class::<track::Track>()?;
     crate::core::register_error(py, m)?;
