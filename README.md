@@ -7,7 +7,7 @@ This library is wrapping songbird for discord.py.
 
 [Document](https://tuna2134.dev/discord-ext-songbird/)
 
-## support
+## Support
 Only macos and linux.
 
 If you are using linux, we are only support this python version.
