@@ -22,7 +22,7 @@ class Core:
     async def ytdl(self, url: str) -> Track:
         "Play youtube video's mp3"
 
-    def source(self, data: bytes, opus: bool) -> Track:
+    def source(self, data: bytes) -> Track:
         "Play bytes data"
 
     async def deafen(self, deaf: bool) -> None:
