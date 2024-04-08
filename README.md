@@ -1,7 +1,7 @@
 # discord-ext-songbird
 [![Test songbird](https://github.com/tuna2134/discord-ext-songbird/actions/workflows/test.yml/badge.svg)](https://github.com/tuna2134/discord-ext-songbird/actions/workflows/test.yml)
 
-Songbird is rust voice manager.
+Songbird is voice client which made by Rust.
 
 This library is wrapping songbird for discord.py.
 
