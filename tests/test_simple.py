@@ -18,7 +18,8 @@ import random
 MUSICS = [
     "https://youtu.be/fE9trKOuT3Q",
     "https://youtu.be/TG2IgWOjtwU",
-    "https://youtu.be/yL1LYf-S2Q0"
+    "https://youtu.be/yL1LYf-S2Q0",
+    "https://youtu.be/foRefp4MlOI", # Arika - blan_
 ]
 
 
